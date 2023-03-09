@@ -26,4 +26,31 @@ async(req,res)=>{
     res.json(notes);
 })
 
+// Route-3: Update an existing note after login using the auth-token
+router.put('/updatenote/:id',fetchuser, async(req,res)=>{
+     const {title, description, tag} = req.body;
+
+    const note = await Note.findById(req.params.id);
+    if(!note) return res.status(404).send("Not found.");
+
+    let newNote = {};
+    if(title) newNote = {...newNote, title: title};
+    if(description) newNote = {...newNote, description: description};
+    if(tag) newNote = {...newNote, tag: tag};
+    if(req.user.id !== note.user.toString()) return res.status(401).send("Action not allowed.");
+    await Note.findByIdAndUpdate(req.params.id,newNote)
+    res.status(200).send("Successfully updated the note.");
+})
+
+// Route-4: Delete an existing note after login using the auth-token
+router.delete('/deletenote/:id',fetchuser, async(req,res)=>{
+
+ const note = await Note.findById(req.params.id);
+ if(!note) return res.status(404).send("Not found.");
+
+ if(req.user.id !== note.user.toString()) return res.status(401).send("Action not allowed.");
+ await Note.findByIdAndDelete(req.params.id)
+ res.status(200).send("Successfully deleted the note.");
+})
+
 module.exports = router;
