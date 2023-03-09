@@ -82,11 +82,11 @@ async(req,res)=>{
     
 });
 
-//Route-1: To fetch details of logged in user after login
+//Route-3: To fetch details of logged in user after login
 router.post('/getuser', fetchuser, async(req,res)=>{
   try{
-    userId = req.user.id;
-    const user = await User.findById(userId).select("-password");
+    newUserId = req.user.id;
+    const user = await User.findById(newUserId).select("-password");
     res.send(user);
   }catch(err){
     console.log(err);
