@@ -11,7 +11,7 @@ router.get('/fetchallnotes',fetchuser, async(req,res)=>{
 })
 
 // Route-2: Add a new note after login using the auth-token
-router.post('/addnewnote',fetchuser,[body('title').isLength({ min: 1 }),body('description').isLength({ min: 6})], 
+router.post('/addnewnote',fetchuser,[body('title').isLength({ min: 3 }),body('description').isLength({ min: 4})], 
 async(req,res)=>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

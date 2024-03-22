@@ -1,11 +1,16 @@
 const mongoose = require("mongoose");
+require('dotenv').config();
 
-const mongoStr = "mongodb://localhost:27017";
+const mongoStr = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSCODE}@cluster0.yg8ia7u.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
-connectToMongo().catch(err => console.log(err));
+connectToMongo().catch((err) => console.log(err));
 
 async function connectToMongo() {
-  await mongoose.connect(mongoStr);
+  try {
+    await mongoose.connect(mongoStr);
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 module.exports = connectToMongo;

@@ -12,6 +12,7 @@ const JWT_SECRET = 'shhhhh';
 router.post('/createuser',[body('name').isLength({ min: 1 }),body('email').isEmail(),body('password').isLength({ min: 5 })], 
 async(req,res)=>{
     // console.log(req.body);
+    let success = false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -41,7 +42,8 @@ async(req,res)=>{
             } 
             const userToken = jwt.sign(data, JWT_SECRET);
             // console.log(userToken);
-            res.send({userToken: userToken});
+            success=true;
+            res.send({success,userToken: userToken});
           }
       });
     });
@@ -50,8 +52,9 @@ async(req,res)=>{
 })
 
 //Route-2: To login existing user 
-router.post('/login',[body('name').isLength({ min: 1 }),body('email').isEmail(),body('password').isLength({ min: 5 })], 
+router.post('/login',[body('email').isEmail(),body('password').isLength({ min: 5 })], 
 async(req,res)=>{
+  let success= false;
   const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -71,11 +74,15 @@ async(req,res)=>{
             } 
             const userToken = jwt.sign(data, JWT_SECRET);
             // console.log(userToken);
-            res.send({userToken: userToken});
+            success = true;
+            res.status(200).json({success, userToken: userToken});
+          }
+          else{
+            res.status(401).json({errors: "Sorry your password is not correct."});
           }
             // res.send("Welcome " + user.name);
           }
-          else res.send("Sorry your password is not correct.");
+          else res.status(401).json({errors: "Sorry your password is not correct."});
       });
       
     }
